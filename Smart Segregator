@@ -1,0 +1,50 @@
+#include <Servo.h>
+
+Servo myservo;
+const int trigger=10;
+const int echo=7;
+float distance;
+float dist_inches;
+// const int sensor_pin = A1;
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(8, OUTPUT);
+  pinMode(trigger,OUTPUT);
+  pinMode(echo,INPUT);
+  digitalWrite(8,LOW);
+  myservo.attach(3);
+  myservo.write(90);
+}
+
+void loop()
+{
+  // float moisture_percentagre;
+  // int sensor_analog;
+  digitalWrite(trigger,LOW);
+  delayMicroseconds(5);
+  digitalWrite(trigger,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigger,LOW);
+  distance=pulseIn(echo,HIGH);
+  distance=distance*0.0001657;
+  dist_inches=distance*39.37;
+  if (dist_inches<11)
+  {
+    Serial.println(dist_inches);
+    Serial.println("no objects");
+    if (digitalRead(8)==HIGH)
+    {
+     myservo.write(45);
+    }
+    else if (digitalRead(8)==LOW)
+    {
+      myservo.write(150);
+    }
+  }
+  else
+  {
+    myservo.write(90);
+  }
+  }
